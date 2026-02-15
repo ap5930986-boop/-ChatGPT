@@ -1,0 +1,131 @@
+Prompt Engineering Best Practices (2026): Updated Checklist + Templates
+The 2026 Checklist (Use This Every Time)
+Success criteria: What does “done” look like (and how will you judge it)?
+Output contract: Format, length, tone, and required sections (make it testable).
+Constraints: Scope, assumptions, exclusions, and what to do when uncertain.
+Inputs: The minimum context + any data that must be used.
+Examples: 1–3 examples when format or style matters.
+Verification: A short rubric / checklist to catch common failures.
+Iteration: Ask for clarifying questions or alternatives when confidence is low.
+1) Define Success Criteria (Stop Asking for “Good”)
+Most “bad model outputs” are actually bad acceptance criteria.
+
+Better prompt pattern
+Goal: {{one sentence}}
+Success criteria:
+- {{must-have 1}}
+- {{must-have 2}}
+- {{must-not-do}}
+Examples of strong criteria:
+
+“Includes only facts present in the provided doc.”
+“Returns valid JSON matching the schema.”
+“Lists tradeoffs + risks + next steps.”
+2) Use an Output Contract (Force Structure)
+If you care about reliability, define the output like a spec.
+
+Output Contract Template (Copy-Paste)
+Output format:
+- Section 1: {{name}} ({{constraints}})
+- Section 2: {{name}} ({{constraints}})
+- Section 3: {{name}} ({{constraints}})
+
+Style:
+- {{tone}}
+- {{reading level}}
+
+Length:
+- {{max words / bullets / lines}}
+When you need machine-readability, use JSON:
+
+{
+    "summary": "2-3 sentences",
+    "key_points": ["..."],
+    "assumptions": ["..."],
+    "risks": ["..."],
+    "next_steps": ["..."]
+}
+3) Separate Instructions From Inputs (The “4-Block” Layout)
+Mixing context + instructions in one blob makes prompts harder to follow and harder to debug.
+
+4-Block Prompt Template
+## INSTRUCTIONS
+{{what to do}}
+
+## INPUTS
+{{the data, doc, or context}}
+
+## CONSTRAINTS
+{{scope, exclusions, uncertainty rule}}
+
+## OUTPUT FORMAT
+{{the contract / schema}}
+4) Prefer Examples Over Adjectives (When Format Matters)
+“Be concise and professional” is vague. An example output isn’t.
+
+Mini few-shot pattern
+Example output:
+- {{bullet 1}}
+- {{bullet 2}}
+- {{bullet 3}}
+Use examples when you see any of these failure modes:
+
+The model drifts in formatting (headings/bullets/JSON shape)
+It over-explains (wordy answers) or under-explains (missing steps)
+You need consistent style across a team
+5) Add a Lightweight Evaluator (Catch Mistakes Before You Ship)
+Don’t rely on “looks good”. Add a tiny self-check the model must pass.
+
+Self-check block (Copy-Paste)
+Before finalizing, verify:
+☐ Output matches the requested format exactly
+☐ All success criteria are satisfied (list any misses)
+☐ Claims not supported by inputs are marked as [UNCERTAIN]
+☐ Next steps are specific and actionable (no vague advice)
+Quick rubric (0–5)
+Score the draft (0–5 each):
+- Correctness
+- Completeness
+- Clarity
+- Actionability
+
+If any score < 4, revise once and rescore.
+6) Model-Specific Notes (ChatGPT, Claude, Gemini)
+These best practices work across models; the difference is what each model responds to best.
+
+ChatGPT: do best with explicit formatting + constraints; great for code and structured outputs. Try the ChatGPT Prompt Generator.
+Claude: excels with “contract-style” instructions and critique/evaluation steps. See Claude Prompt Generator and Claude Prompt Engineering Best Practices (2026).
+Gemini: benefits from clear input labeling (especially multimodal) and explicit verification steps. Use Gemini Prompt Generator.
+Copy-Paste Templates (Ready to Use)
+A) “Best Practices Prompt Builder” (Generate a Better Prompt)
+Use this inside Prompt Builder to generate a production-grade prompt:
+
+Act as a senior prompt engineer.
+
+Task: {{describe the task}}
+User: {{who will run this prompt}}
+Constraints: {{hard rules + exclusions}}
+Output needed: {{format + length + tone}}
+
+Create:
+1) A system prompt (contract-style: role, goal, constraints, uncertainty rule, output format)
+2) A user prompt using the 4-block layout (INSTRUCTIONS, INPUTS, CONSTRAINTS, OUTPUT FORMAT)
+3) A short self-check evaluator (4 bullets max)
+B) “Rewrite With Constraints” (Turn Messy Notes Into a Spec)
+Rewrite the request below into a clear prompt spec:
+- success criteria (3 bullets)
+- constraints (3 bullets)
+- output contract (sections + length)
+
+Request:
+{{paste messy request}}
+C) “Two Options + Recommendation”
+Generate two options.
+For each: pros, cons, and risks.
+Then recommend one option and explain why in 3 bullets.
+Anti-Patterns That Still Break Prompts in 2026
+Keyword dumping: long lists of instructions without priorities
+Hidden constraints: expecting length/format/scope without stating it
+Context dumping: large inputs with no “what matters most” guidance
+One-shot shipping: no self-check, no rubric, no iteration
+Conflicting goals: asking for “short” and “comprehensive” at the same time
